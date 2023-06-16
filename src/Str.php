@@ -587,4 +587,15 @@ class Str extends BaseStr
     {
         return rtrim($str, "\0");
     }
+
+    /**
+     * 限制字符串长度
+     * @param string $string
+     * @param int|null $length
+     * @return string
+     */
+    public static function substrR($string, $length = null)
+    {
+        return self::substr($string, 0, $length);
+    }
 }
