@@ -13,5 +13,5 @@ namespace axguowen\helper\contract;
 
 interface Arrayable
 {
-    public function toArray();
+    public function toArray(): array;
 }

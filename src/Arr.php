@@ -172,7 +172,7 @@ if (class_exists('think\helper\Arr')) {
          * @param mixed         $default
          * @return mixed
          */
-        public static function first($array, $callback = null, $default = null)
+        public static function first($array, callable $callback = null, $default = null)
         {
             if (is_null($callback)) {
                 if (empty($array)) {
@@ -201,7 +201,7 @@ if (class_exists('think\helper\Arr')) {
          * @param mixed         $default
          * @return mixed
          */
-        public static function last($array, $callback = null, $default = null)
+        public static function last($array, callable $callback = null, $default = null)
         {
             if (is_null($callback)) {
                 return empty($array) ? value($default) : end($array);
@@ -303,7 +303,7 @@ if (class_exists('think\helper\Arr')) {
             }
 
             if (strpos($key, '.') === false) {
-                return isset($array[$key]) ? $array[$key] : value($default);
+                return $array[$key] ?? value($default);
             }
 
             foreach (explode('.', $key) as $segment) {
@@ -390,7 +390,7 @@ if (class_exists('think\helper\Arr')) {
         {
             $results = [];
 
-            list($value, $key) = static::explodePluckParameters($value, $key);
+            [$value, $key] = static::explodePluckParameters($value, $key);
 
             foreach ($array as $item) {
                 $itemValue = data_get($item, $value);

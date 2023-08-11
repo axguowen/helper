@@ -50,19 +50,19 @@ if (class_exists('think\Collection')) {
          * @access public
          * @return bool
          */
-        public function isEmpty()
+        public function isEmpty(): bool
         {
             return empty($this->items);
         }
 
-        public function toArray()
+        public function toArray(): array
         {
             return array_map(function ($value) {
                 return $value instanceof Arrayable ? $value->toArray() : $value;
             }, $this->items);
         }
 
-        public function all()
+        public function all(): array
         {
             return $this->items;
         }
@@ -87,7 +87,7 @@ if (class_exists('think\Collection')) {
          * @param string $indexKey 键名
          * @return array
          */
-        public function dictionary($items = null, &$indexKey = null)
+        public function dictionary($items = null, string &$indexKey = null)
         {
             if ($items instanceof self) {
                 $items = $items->all();
@@ -114,7 +114,7 @@ if (class_exists('think\Collection')) {
          * @param string $indexKey 指定比较的键名
          * @return static
          */
-        public function diff($items, $indexKey = null)
+        public function diff($items, string $indexKey = null)
         {
             if ($this->isEmpty() || is_scalar($this->items[0])) {
                 return new static(array_diff($this->items, $this->convertToArray($items)));
@@ -142,7 +142,7 @@ if (class_exists('think\Collection')) {
          * @param string $indexKey 指定比较的键名
          * @return static
          */
-        public function intersect($items, $indexKey = null)
+        public function intersect($items, string $indexKey = null)
         {
             if ($this->isEmpty() || is_scalar($this->items[0])) {
                 return new static(array_intersect($this->items, $this->convertToArray($items)));
@@ -213,7 +213,7 @@ if (class_exists('think\Collection')) {
          * @param mixed    $initial
          * @return mixed
          */
-        public function reduce($callback, $initial = null)
+        public function reduce(callable $callback, $initial = null)
         {
             return array_reduce($this->items, $callback, $initial);
         }
@@ -247,7 +247,7 @@ if (class_exists('think\Collection')) {
          * @param string $key   KEY
          * @return $this
          */
-        public function push($value, $key = null)
+        public function push($value, string $key = null)
         {
             if (is_null($key)) {
                 $this->items[] = $value;
@@ -266,7 +266,7 @@ if (class_exists('think\Collection')) {
          * @param bool $preserveKeys
          * @return static
          */
-        public function chunk($size, $preserveKeys = false)
+        public function chunk(int $size, bool $preserveKeys = false)
         {
             $chunks = [];
 
@@ -284,7 +284,7 @@ if (class_exists('think\Collection')) {
          * @param string $key   KEY
          * @return $this
          */
-        public function unshift($value, $key = null)
+        public function unshift($value, string $key = null)
         {
             if (is_null($key)) {
                 array_unshift($this->items, $value);
@@ -302,7 +302,7 @@ if (class_exists('think\Collection')) {
          * @param callable $callback 回调
          * @return $this
          */
-        public function each($callback)
+        public function each(callable $callback)
         {
             foreach ($this->items as $key => $item) {
                 $result = $callback($item, $key);
@@ -323,7 +323,7 @@ if (class_exists('think\Collection')) {
          * @param callable|null $callback 回调
          * @return static
          */
-        public function map($callback)
+        public function map(callable $callback)
         {
             return new static(array_map($callback, $this->items));
         }
@@ -334,7 +334,7 @@ if (class_exists('think\Collection')) {
          * @param callable|null $callback 回调
          * @return static
          */
-        public function filter($callback = null)
+        public function filter(callable $callback = null)
         {
             if ($callback) {
                 return new static(array_filter($this->items, $callback));
@@ -351,7 +351,7 @@ if (class_exists('think\Collection')) {
          * @param mixed  $value    数据
          * @return static
          */
-        public function where($field, $operator, $value = null)
+        public function where(string $field, $operator, $value = null)
         {
             if (is_null($value)) {
                 $value    = $operator;
@@ -360,11 +360,11 @@ if (class_exists('think\Collection')) {
 
             return $this->filter(function ($data) use ($field, $operator, $value) {
                 if (strpos($field, '.')) {
-                    list($field, $relation) = explode('.', $field);
+                    [$field, $relation] = explode('.', $field);
 
-                    $result = isset($data[$field][$relation]) ? $data[$field][$relation] : null;
+                    $result = $data[$field][$relation] ?? null;
                 } else {
-                    $result = isset($data[$field]) ? $data[$field] : null;
+                    $result = $data[$field] ?? null;
                 }
 
                 switch (strtolower($operator)) {
@@ -392,10 +392,10 @@ if (class_exists('think\Collection')) {
                     case 'not in':
                         return is_scalar($result) && !in_array($result, $value, true);
                     case 'between':
-                        list($min, $max) = is_string($value) ? explode(',', $value) : $value;
+                        [$min, $max] = is_string($value) ? explode(',', $value) : $value;
                         return is_scalar($result) && $result >= $min && $result <= $max;
                     case 'not between':
-                        list($min, $max) = is_string($value) ? explode(',', $value) : $value;
+                        [$min, $max] = is_string($value) ? explode(',', $value) : $value;
                         return is_scalar($result) && $result > $max || $result < $min;
                     case '==':
                     case '=':
@@ -412,7 +412,7 @@ if (class_exists('think\Collection')) {
          * @param string $value 数据
          * @return static
          */
-        public function whereLike($field, $value)
+        public function whereLike(string $field, string $value)
         {
             return $this->where($field, 'like', $value);
         }
@@ -424,7 +424,7 @@ if (class_exists('think\Collection')) {
          * @param string $value 数据
          * @return static
          */
-        public function whereNotLike($field, $value)
+        public function whereNotLike(string $field, string $value)
         {
             return $this->where($field, 'not like', $value);
         }
@@ -436,7 +436,7 @@ if (class_exists('think\Collection')) {
          * @param array  $value 数据
          * @return static
          */
-        public function whereIn($field, array $value)
+        public function whereIn(string $field, array $value)
         {
             return $this->where($field, 'in', $value);
         }
@@ -448,7 +448,7 @@ if (class_exists('think\Collection')) {
          * @param array  $value 数据
          * @return static
          */
-        public function whereNotIn($field, array $value)
+        public function whereNotIn(string $field, array $value)
         {
             return $this->where($field, 'not in', $value);
         }
@@ -460,7 +460,7 @@ if (class_exists('think\Collection')) {
          * @param mixed  $value 数据
          * @return static
          */
-        public function whereBetween($field, $value)
+        public function whereBetween(string $field, $value)
         {
             return $this->where($field, 'between', $value);
         }
@@ -472,7 +472,7 @@ if (class_exists('think\Collection')) {
          * @param mixed  $value 数据
          * @return static
          */
-        public function whereNotBetween($field, $value)
+        public function whereNotBetween(string $field, $value)
         {
             return $this->where($field, 'not between', $value);
         }
@@ -484,7 +484,7 @@ if (class_exists('think\Collection')) {
          * @param string|null $indexKey  作为索引值的列
          * @return array
          */
-        public function column($columnKey, $indexKey = null)
+        public function column( ? string $columnKey, string $indexKey = null)
         {
             return array_column($this->items, $columnKey, $indexKey);
         }
@@ -496,7 +496,7 @@ if (class_exists('think\Collection')) {
          * @param callable|null $callback 回调
          * @return static
          */
-        public function sort($callback = null)
+        public function sort(callable $callback = null)
         {
             $items = $this->items;
 
@@ -516,11 +516,11 @@ if (class_exists('think\Collection')) {
          * @param string $order 排序
          * @return $this
          */
-        public function order($field, $order = 'asc')
+        public function order(string $field, string $order = 'asc')
         {
             return $this->sort(function ($a, $b) use ($field, $order) {
-                $fieldA = isset($a[$field]) ? $a[$field] : null;
-                $fieldB = isset($b[$field]) ? $b[$field] : null;
+                $fieldA = $a[$field] ?? null;
+                $fieldB = $b[$field] ?? null;
 
                 return 'desc' == strtolower($order) ? intval($fieldB > $fieldA) : intval($fieldA > $fieldB);
             });
@@ -549,7 +549,7 @@ if (class_exists('think\Collection')) {
          * @param null          $default
          * @return mixed
          */
-        public function first($callback = null, $default = null)
+        public function first(callable $callback = null, $default = null)
         {
             return Arr::first($this->items, $callback, $default);
         }
@@ -562,7 +562,7 @@ if (class_exists('think\Collection')) {
          * @param null          $default
          * @return mixed
          */
-        public function last($callback = null, $default = null)
+        public function last(callable $callback = null, $default = null)
         {
             return Arr::last($this->items, $callback, $default);
         }
@@ -576,14 +576,14 @@ if (class_exists('think\Collection')) {
          * @param bool $preserveKeys preserveKeys
          * @return static
          */
-        public function slice($offset, $length = null, $preserveKeys = false)
+        public function slice(int $offset, int $length = null, bool $preserveKeys = false)
         {
             return new static(array_slice($this->items, $offset, $length, $preserveKeys));
         }
 
         // ArrayAccess
         #[\ReturnTypeWillChange]
-        public function offsetExists($offset)
+        public function offsetExists($offset) : bool
         {
             return array_key_exists($offset, $this->items);
         }
@@ -611,14 +611,14 @@ if (class_exists('think\Collection')) {
         }
 
         //Countable
-        public function count()
+        public function count(): int
         {
             return count($this->items);
         }
 
         //IteratorAggregate
         #[\ReturnTypeWillChange]
-        public function getIterator()
+        public function getIterator(): Traversable
         {
             return new ArrayIterator($this->items);
         }
@@ -636,7 +636,7 @@ if (class_exists('think\Collection')) {
          * @param integer $options json参数
          * @return string
          */
-        public function toJson(int $options = JSON_UNESCAPED_UNICODE)
+        public function toJson(int $options = JSON_UNESCAPED_UNICODE): string
         {
             return json_encode($this->toArray(), $options);
         }
@@ -653,7 +653,7 @@ if (class_exists('think\Collection')) {
          * @param mixed $items 数据
          * @return array
          */
-        protected function convertToArray($items)
+        protected function convertToArray($items): array
         {
             if ($items instanceof self) {
                 return $items->all();
