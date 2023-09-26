@@ -57,6 +57,10 @@ class DomainDns
             if($record['host'] != $domain){
                 continue;
             }
+            // 如果没有记录
+            if(!isset($record['target'])){
+                continue;
+            }
             // 总记录数量自增
             $all_count++;
             // 如果解析正确
@@ -106,6 +110,10 @@ class DomainDns
             if($record['host'] != $domain){
                 continue;
             }
+            // 如果没有记录
+            if(!isset($record['target'])){
+                continue;
+            }
             // 总记录数量自增
             $all_count++;
             // 如果解析正确
@@ -153,6 +161,10 @@ class DomainDns
         foreach($records as $record){
             // 如果主机记录不一致
             if($record['host'] != $domain){
+                continue;
+            }
+            // 如果没有记录
+            if(!isset($record['target'])){
                 continue;
             }
             // 总记录数量自增
