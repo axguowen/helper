@@ -657,4 +657,34 @@ class Str extends BaseStr
         }
         return $str;
     }
+
+    /**
+     * 生成UUID
+     * @param bool $upper
+     * @return string
+     */
+    public static function uuid($upper = false): string
+    {
+        // 函数随机数播种
+        mt_srand((double) microtime() * 10000);
+        // 生成随机字符串
+        $charid = md5(uniqid(rand(), true));
+        if(true === $upper){
+            $charid = strtoupper($charid);
+        }
+        // 分隔符'-'
+        $hyphen = chr(45);
+        // 构造UUID
+        $uuid = implode($hyphen, [
+            substr($charid, 0, 8),
+            substr($charid, 8, 4),
+            substr($charid,12, 4),
+            substr($charid,16, 4),
+            substr($charid,20,12),
+        ]);
+        // 追加括号
+        // $uuid = chr(123) . $uuid . chr(125);
+
+        return $uuid;
+    }
 }
