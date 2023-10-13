@@ -21,8 +21,12 @@ class DomainDns
      */
     public static function getRecords(string $domain): array
     {
-        // 获取全部记录
-        $records = dns_get_record($domain, DNS_A | DNS_AAAA | DNS_CNAME);
+        try{
+            // 获取全部记录
+            $records = dns_get_record($domain, DNS_A | DNS_AAAA | DNS_CNAME);
+        } catch (\Exception $e){
+            return [null, $e];
+        }
         // 如果失败或者为空
         if(!is_array($records)){
             return [null, new \Exception('获取域名解析信息失败')];
