@@ -47,7 +47,7 @@ class DomainDns
         $getRecordsResult = static::getRecords($domain);
         // 如果失败
         if(is_null($getRecordsResult[0])){
-            return $getRecordsResult;
+            return [null, new \Exception('域名未解析，请将域名做A记录解析到 <' . $host . '>')];
         }
         // 获取正确的结果
         $records = $getRecordsResult[0];
@@ -100,7 +100,7 @@ class DomainDns
         $getRecordsResult = static::getRecords($domain);
         // 如果失败
         if(is_null($getRecordsResult[0])){
-            return $getRecordsResult;
+            return [null, new \Exception('域名未解析，请将域名做AAAA记录解析到 <' . $host . '>')];
         }
         // 获取正确的结果
         $records = $getRecordsResult[0];
@@ -153,7 +153,7 @@ class DomainDns
         $getRecordsResult = static::getRecords($domain);
         // 如果失败
         if(is_null($getRecordsResult[0])){
-            return $getRecordsResult;
+            return [null, new \Exception('域名未解析，请将域名做CNAME记录解析到 <' . $host . '>')];
         }
         // 获取正确的结果
         $records = $getRecordsResult[0];
