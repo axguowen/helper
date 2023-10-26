@@ -687,4 +687,33 @@ class Str extends BaseStr
 
         return $uuid;
     }
+
+    /**
+     * URL解码
+     * @param string $value
+     * @return string
+     */
+    public static function urlencode($value): string
+    {
+        // 如果为空
+        if(empty($value)){
+            return '';
+        }
+
+        try{
+            // url解码
+            $decodeValue = urldecode($value);
+            // 获取编码类型
+            $encodeType = mb_detect_encoding($decodeValue, ['UTF-8', 'GBK']);
+            // 不是UTF-8编码
+            if($encodeType != 'UTF-8'){
+                // 编码转换为UTF-8
+                $value = urlencode(iconv($encodeType, 'UTF-8', $decodeValue));
+            }
+        } catch (\Exception $e){
+            $value = '';
+        }
+        // 返回
+        return $value;
+    }
 }
