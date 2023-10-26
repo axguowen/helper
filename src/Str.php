@@ -708,12 +708,12 @@ class Str extends BaseStr
             // 不是UTF-8编码
             if($encodeType != 'UTF-8'){
                 // 编码转换为UTF-8
-                $value = urlencode(iconv($encodeType, 'UTF-8', $decodeValue));
+                $decodeValue = urlencode(iconv($encodeType, 'UTF-8', $decodeValue));
             }
         } catch (\Exception $e){
-            $value = '';
+            $decodeValue = '';
         }
         // 返回
-        return $value;
+        return $decodeValue;
     }
 }
