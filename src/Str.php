@@ -693,7 +693,7 @@ class Str extends BaseStr
      * @param string $value
      * @return string
      */
-    public static function urlencode($value): string
+    public static function urldecode($value): string
     {
         // 如果为空
         if(empty($value)){
