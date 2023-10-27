@@ -728,7 +728,7 @@ class Str extends BaseStr
         // 匹配到的网址
         $linkMatched = [];
         // 开始匹配
-        preg_match_all('#(http(s)?:\/\/)[a-zA-Z0-9\-\_\.\?\#\=\&\/\%]+#', $content, $linkMatched);
+        preg_match_all('#(http(s)?:\/\/)[a-zA-Z0-9\-\_\.\?\#\=\&\/\%]+#i', $content, $linkMatched);
         // 如果没有匹配到
         if(!isset($linkMatched[0][0])){
             return '';
