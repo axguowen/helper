@@ -716,4 +716,37 @@ class Str extends BaseStr
         // 返回
         return $decodeValue;
     }
+
+    /**
+     * 获取内容中的网址
+     * @param string $content
+     * @param bool $withQuery
+     * @return string
+     */
+    public static function parseLink($content, $withQuery = false): string
+    {
+        // 匹配到的网址
+        $linkMatched = [];
+        // 开始匹配
+        preg_match_all('#(http(s)?:\/\/)[a-zA-Z0-9\-\_\.\?\#\=\&\/\%]+#', $content, $linkMatched);
+        // 如果没有匹配到
+        if(!isset($linkMatched[0][0])){
+            return '';
+        }
+
+        // 获取匹配到的第一个网址
+        $link = $linkMatched[0][0];
+
+        // 如果不需要保留参数
+        if(!$withQuery){
+            // 分隔问号
+            $linkArray = explode('?', $link);
+            // 分隔井号
+            $linkArray = explode('#', $linkArray[0]);
+            // 获取结果
+            $link = $linkArray[0];
+        }
+        // 返回
+        return $link;
+    }
 }
