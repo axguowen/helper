@@ -737,6 +737,11 @@ class Str extends BaseStr
         // 获取匹配到的第一个网址
         $link = $linkMatched[0][0];
 
+        // 如果不包含?和#
+        if(false === strpos($link, '?') && false === strpos($link, '#')){
+            return $link;
+        }
+
         // 如果不需要保留参数
         if(!$withQuery){
             // 分隔问号
