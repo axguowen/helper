@@ -713,6 +713,11 @@ class Str extends BaseStr
         } catch (\Exception $e){
             $decodeValue = '';
         }
+
+        // 如果json编码失败
+        if(false === json_encode(['value' => $decodeValue], JSON_UNESCAPED_UNICODE)){
+            return '';
+        }
         // 返回
         return $decodeValue;
     }
