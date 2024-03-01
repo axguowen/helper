@@ -463,9 +463,9 @@ class Str extends BaseStr
         // 转换完成的字符串
         $traditionalized = '';
         // 简体字符串
-        $simplifiedChar = self::simplifiedChar();
+        $simplifiedChar = static::simplifiedChar();
         // 繁体字符串
-        $traditionalChar = self::traditionalChar();
+        $traditionalChar = static::traditionalChar();
         // 字符串长度
         $length = mb_strlen($str);
         // 遍历字符串
@@ -758,5 +758,30 @@ class Str extends BaseStr
         }
         // 返回
         return $link;
+    }
+
+    /**
+     * 生成订单ID
+     * @access public
+     * @return string
+     */
+    public static function generateOrderId(): string
+    {
+        // 日期时间字符串
+        $dateTimeStr = date('ymdHis');
+        // 随机字符串
+        $randomStr = mt_rand(1000, 9999);
+        // 实例化雪花算法
+        $snowFlake = new SnowFlake([
+            'twepoch' => time() * 1000,
+        ]);
+        // 生成雪花ID
+        $snowFlakeId = $snowFlake->generateId();
+        // 截取字符串
+        $snowFlakeId = substr($snowFlakeId, -10);
+        // 长度不足补0
+        $snowFlakeId = static::digit($snowFlakeId, 10);
+        // 拼接字符串
+        return '10' . $dateTimeStr . $snowFlakeId . $randomStr;
     }
 }
