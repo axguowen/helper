@@ -768,7 +768,7 @@ class Str extends BaseStr
     public static function generateOrderId(): string
     {
         // 日期时间字符串
-        $dateTimeStr = date('YmdHis');
+        $dateTimeStr = date('ymdHis');
         // 随机字符串
         $randomStr = mt_rand(1000, 9999);
         // 实例化雪花算法
@@ -782,6 +782,6 @@ class Str extends BaseStr
         // 长度不足补0
         $snowFlakeId = static::digit($snowFlakeId, 10);
         // 拼接字符串
-        return '1000' . $dateTimeStr . $snowFlakeId . $randomStr;
+        return '10' . $dateTimeStr . $snowFlakeId . $randomStr;
     }
 }
