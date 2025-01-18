@@ -62,14 +62,16 @@ class DomainDns
                 continue;
             }
             // 如果没有记录
-            if(!isset($record['target'])){
+            if(!isset($record['target']) && !isset($record['ip'])){
                 continue;
             }
             // 总记录数量自增
             $all_count++;
             // 如果解析正确
-            if($record['type'] == 'A' && $record['target'] == $host){
-                $right_count++;
+            if($record['type'] == 'A'){
+                if((isset($record['target']) && $record['target'] == $host) || (isset($record['ip']) && $record['ip'] == $host)){
+                    $right_count++;
+                }
             }
         }
         // 如果总记录数为空
