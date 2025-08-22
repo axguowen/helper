@@ -784,4 +784,81 @@ class Str extends BaseStr
         // 拼接字符串
         return '10' . $dateTimeStr . $snowFlakeId . $randomStr;
     }
+
+    /**
+     * 转换为首字母头像
+     * @access public
+     * @param string $value
+     * @return string
+     */
+    public static function letterAvatar($value)
+    {
+        $total = unpack('L', hash('adler32', $value, true))[1];
+        $hue = $total % 360;
+        // 转换为RGB
+        $rgb = static::hsvToRgb($hue / 360, 0.3, 0.9);
+        // 背景色
+        $bg = 'rgb(' . implode(',', $rgb) . ')';
+        // 文字颜色
+        $color = '#ffffff';
+        // 提取第一个文字
+        $first = mb_strtoupper(mb_substr($value, 0, 1));
+        // 生成SVG内容
+        $svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="100" width="100"><rect fill="' . $bg . '" x="0" y="0" width="100" height="100"></rect><text x="50" y="50" font-size="60" text-copy="fast" fill="' . $color . '" text-anchor="middle" text-rights="admin" dominant-baseline="central">' . $first . '</text></svg>';
+        // 转换为URL并返回
+        return 'data:image/svg+xml;base64,' . base64_encode($svg);
+    }
+
+    /**
+     * 转换为RGB
+     * @access public
+     * @param float $h
+     * @param float $s
+     * @param float $v
+     * @return array
+     */
+    public static function hsvToRgb($h, $s, $v)
+    {
+        $r = $g = $b = 0;
+        $i = floor($h * 6);
+        $f = $h * 6 - $i;
+        $p = $v * (1 - $s);
+        $q = $v * (1 - $f * $s);
+        $t = $v * (1 - (1 - $f) * $s);
+        // 根据索引计算RGB
+        switch ($i % 6) {
+            case 0:
+                $r = $v;
+                $g = $t;
+                $b = $p;
+                break;
+            case 1:
+                $r = $q;
+                $g = $v;
+                $b = $p;
+                break;
+            case 2:
+                $r = $p;
+                $g = $v;
+                $b = $t;
+                break;
+            case 3:
+                $r = $p;
+                $g = $q;
+                $b = $v;
+                break;
+            case 4:
+                $r = $t;
+                $g = $p;
+                $b = $v;
+                break;
+            case 5:
+                $r = $v;
+                $g = $p;
+                $b = $q;
+                break;
+        }
+        // 返回
+        return [floor($r * 255), floor($g * 255), floor($b * 255)];
+    }
 }
